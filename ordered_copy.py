@@ -4,7 +4,7 @@ import time
 import configparser
 
 
-PROGRAM_VERSION = "1.0.0"
+PROGRAM_VERSION = "1.0.1"
 
 CONFIG_FILE = "ordered_copy.ini"
 DEFAULT_CONFIG = {
@@ -113,6 +113,10 @@ def main():
         return
     if not os.path.exists(abs_path_to):
         print("'path_to' is not exists!")
+        return
+
+    if abs_path_from == abs_path_to:
+        print("'path_from' == 'path_to'!")
         return
 
     if config["use_copytree"]:
