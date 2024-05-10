@@ -41,10 +41,15 @@ def copy_with_replace_by_date(path_from, path_to, op_type, set_of_ignored_paths)
             
             if mtime_path_from > mtime_path_to:
                 print("file-file: rewrite")
-                shutil.copy2(path_from, path_to)
-                # y.upload(path_from, path_to, overwrite=True)
-                copied_files += 1
-                shutil.copystat(f_path_from, f_path_to)
+                try:
+                    shutil.copy2(path_from, path_to)
+                    copied_files += 1
+                    shutil.copystat(f_path_from, f_path_to)
+                except OSError as err:
+                    print(err)
+                    status = "Error!"
+                    msg = err
+                    return {"status": status, "msg": msg, "copied_files": copied_files}
                    
         else:
             if f_name_to == "": # for example, if path_to = 'dir1\dir2\'
@@ -59,13 +64,25 @@ def copy_with_replace_by_date(path_from, path_to, op_type, set_of_ignored_paths)
                     return {"status": status, "msg": msg, "copied_files": copied_files}
             else:
                 print("Create path: ", f_path_to)
-                # создаёт пустую копию дерева каталогов (вместе со stat, а файлы пропускаются):
-                shutil.copytree(f_path_from, f_path_to, dirs_exist_ok=True, ignore=shutil.ignore_patterns("*"))
+                try:
+                    # создаёт пустую копию дерева каталогов (вместе со stat, а файлы пропускаются):
+                    shutil.copytree(f_path_from, f_path_to, dirs_exist_ok=True, ignore=shutil.ignore_patterns("*"))
+                except OSError as err:
+                    print(err)
+                    status = "Error!"
+                    msg = err
+                    return {"status": status, "msg": msg, "copied_files": copied_files}
                 
             print("file-file: write")
-            shutil.copy2(path_from, path_to)
-            copied_files += 1
-            shutil.copystat(f_path_from, f_path_to)
+            try:
+                shutil.copy2(path_from, path_to)
+                copied_files += 1
+                shutil.copystat(f_path_from, f_path_to)
+            except OSError as err:
+                print(err)
+                status = "Error!"
+                msg = err
+                return {"status": status, "msg": msg, "copied_files": copied_files}
     
     elif op_type == "fd":
         print("file-dir")
@@ -98,24 +115,49 @@ def copy_with_replace_by_date(path_from, path_to, op_type, set_of_ignored_paths)
                 
                 if mtime_path_from > mtime_path_to_new:
                     print("file-dir: rewrite")
-                    shutil.copy2(path_from, path_to_new)
-                    copied_files += 1
-                    shutil.copystat(f_path_from, path_to)
+                    try:
+                        shutil.copy2(path_from, path_to_new)
+                        copied_files += 1
+                        shutil.copystat(f_path_from, path_to)
+                    except OSError as err:
+                        print(err)
+                        status = "Error!"
+                        msg = err
+                        return {"status": status, "msg": msg, "copied_files": copied_files}
                     
             else:
                 print("file-dir: write")
-                shutil.copy2(path_from, path_to_new)
-                copied_files += 1
-                shutil.copystat(f_path_from, path_to)
+                try:
+                    shutil.copy2(path_from, path_to_new)
+                    copied_files += 1
+                    shutil.copystat(f_path_from, path_to)
+                except OSError as err:
+                    print(err)
+                    status = "Error!"
+                    msg = err
+                    return {"status": status, "msg": msg, "copied_files": copied_files}
+
         else:
             print("Create path: ", path_to)
-            # создаёт пустую копию дерева каталогов (вместе со stat, а файлы пропускаются):
-            shutil.copytree(f_path_from, path_to, dirs_exist_ok=True, ignore=shutil.ignore_patterns("*"))
+            try:
+                # создаёт пустую копию дерева каталогов (вместе со stat, а файлы пропускаются):
+                shutil.copytree(f_path_from, path_to, dirs_exist_ok=True, ignore=shutil.ignore_patterns("*"))
+            except OSError as err:
+                print(err)
+                status = "Error!"
+                msg = err
+                return {"status": status, "msg": msg, "copied_files": copied_files}
 
             print("file-dir: write")
-            shutil.copy2(path_from, path_to)
-            copied_files += 1
-            shutil.copystat(f_path_from, path_to)
+            try:
+                shutil.copy2(path_from, path_to)
+                copied_files += 1
+                shutil.copystat(f_path_from, path_to)
+            except OSError as err:
+                print(err)
+                status = "Error!"
+                msg = err
+                return {"status": status, "msg": msg, "copied_files": copied_files}
         
     elif op_type == "df":
         print("dir-file")
@@ -136,8 +178,14 @@ def copy_with_replace_by_date(path_from, path_to, op_type, set_of_ignored_paths)
         if len_objects == 0:
             if not os.path.exists(path_to):
                 print("Empty folder. Create path: ", path_to)
-                # создаёт пустую копию дерева каталогов (вместе со stat, а файлы пропускаются):
-                shutil.copytree(path_from, path_to, dirs_exist_ok=True, ignore=shutil.ignore_patterns("*"))
+                try:
+                    # создаёт пустую копию дерева каталогов (вместе со stat, а файлы пропускаются):
+                    shutil.copytree(path_from, path_to, dirs_exist_ok=True, ignore=shutil.ignore_patterns("*"))
+                except OSError as err:
+                    print(err)
+                    status = "Error!"
+                    msg = err
+                    return {"status": status, "msg": msg, "copied_files": copied_files}
         
         cur_obj = 1
         for obj in list_path_from:
@@ -147,7 +195,9 @@ def copy_with_replace_by_date(path_from, path_to, op_type, set_of_ignored_paths)
 
             # if the file was deleted during directory copying
             if not os.path.exists(path_from_obj):
-                res = {"status": "Error!", "msg": "Path not found: '{}'".format(path_from_obj), "copied_files": 0, "tag": "fake return"}
+                status = "Error!"
+                msg = "Path not found: '{}'".format(path_from_obj)
+                res = {"status": status, "msg": msg, "copied_files": 0, "tag": "fake return"}
                 task_errors.append(res)
                 cur_obj += 1
                 continue 
@@ -162,7 +212,13 @@ def copy_with_replace_by_date(path_from, path_to, op_type, set_of_ignored_paths)
                     task_errors.append(res)
                 else:
                     f_path_from = os.path.split(path_from_obj)[0]
-                    shutil.copystat(f_path_from, path_to)
+                    try:
+                        shutil.copystat(f_path_from, path_to)
+                    except OSError as err:
+                        print(err)
+                        status = "Error!"
+                        msg = err
+                        return {"status": status, "msg": msg, "copied_files": copied_files}
 
             elif os.path.isdir(path_from_obj):
                 print("obj: {} (dir)".format(obj))
@@ -174,16 +230,31 @@ def copy_with_replace_by_date(path_from, path_to, op_type, set_of_ignored_paths)
                 if res["status"] == "Error!":
                     task_errors.append(res)
                 else:
-                    shutil.copystat(path_from_obj, path_to_obj)
+                    try:
+                        shutil.copystat(path_from_obj, path_to_obj)
+                    except OSError as err:
+                        print(err)
+                        status = "Error!"
+                        msg = err
+                        return {"status": status, "msg": msg, "copied_files": copied_files}
+
             else:
-                res = {"status": "Error!", "msg": "The object is not supported: '{}'".format(path_from_obj), "copied_files": 0, "tag": "fake return"}
+                status = "Error!"
+                msg = "The object is not supported: '{}'".format(path_from_obj)
+                res = {"status": status, "msg": msg, "copied_files": 0, "tag": "fake return"}
                 task_errors.append(res)
                 # just skipped this file but didn't stop the task
                 
             cur_obj += 1
             print("-----------------------------------------------")
 
-        shutil.copystat(path_from, path_to)
+        try:
+            shutil.copystat(path_from, path_to)
+        except OSError as err:
+            print(err)
+            status = "Error!"
+            msg = err
+            return {"status": status, "msg": msg, "copied_files": copied_files}
 
     else:
         status = "Error!"
