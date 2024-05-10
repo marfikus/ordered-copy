@@ -4,7 +4,7 @@ list_of_tasks = [
 # [r"test_dir_from\ddd\11", r"/Applications/smartphone_backup/ddd", "dd"],
 # [r"myfile.txt", r"/Applications/smartphone_backup/ddd/myfile.txt", "ff"],
 
-    # [r"test/from", r"test/to", "dd"],
+    [r"test/from", r"test/to", "dd"],
     # [r"test/d1", r"test/to/d1", "dd"],
     [r"test/a", r"test/to/a", "dd"],
     # [r"test/from/dir1/doc1.txt", r"test/to/dir1/doc1.txt", "ff"],

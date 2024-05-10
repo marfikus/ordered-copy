@@ -20,5 +20,8 @@ path3 = "f3.txt"
 src = "test/from/dir1"
 dst = "test/to/dir1"
 
-# shutil.copytree(src, dst, dirs_exist_ok=True)
-shutil.copytree(src, dst, dirs_exist_ok=True, ignore=shutil.ignore_patterns("*"))
+try:
+    shutil.copytree(src, dst, dirs_exist_ok=True)
+    # shutil.copytree(src, dst, dirs_exist_ok=True, ignore=shutil.ignore_patterns("*"))
+except OSError as e:
+    print(e)
