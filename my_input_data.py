@@ -20,7 +20,7 @@ list_of_tasks = [
 # [r"/storage/sdcard0/python_scripts", r"/Applications/smartphone_backup/from_dexp_xl_145/python_scripts", "dd"]
 ]
 
-set_of_ignored_paths = {
+list_of_ignored_paths = [
 # structure hint: path_from
 # r"ddd\11\ttt",
 # r"ddd\11\myfile_10.txt",
@@ -32,7 +32,7 @@ set_of_ignored_paths = {
 # r"/storage/sdcard0/python_scripts/smartphone_backup/__pycache__",
 # r"/storage/sdcard0/python_scripts/smartphone_backup/connect_data.py",
 # r"/storage/sdcard0/python_scripts/smartphone_backup/get_token.py",
-}
+]
 
 
 # xcopy "I:\data\colornote\backup\*.*" "D:\from_dexp_xl_145\colornote\backup\*.*" /F /H /R /K /Y /D /E

@@ -3,8 +3,8 @@ import os
 import shutil
 import my_input_data as mid
 
-    
-def copy_with_replace_by_date(path_from, path_to, op_type, set_of_ignored_paths):
+
+def copy_with_replace_by_date(path_from, path_to, op_type, list_of_ignored_paths):
     status = "Ok"
     msg = ""
     copied_files = 0
@@ -15,7 +15,7 @@ def copy_with_replace_by_date(path_from, path_to, op_type, set_of_ignored_paths)
         msg = "Path 'from' not found: '{}'".format(path_from)
         return {"status": status, "msg": msg, "copied_files": copied_files}
         
-    if path_from in set_of_ignored_paths:
+    if path_from in list_of_ignored_paths:
         msg = "Path is ignored: '{}'".format(path_from)
         return {"status": status, "msg": msg, "copied_files": copied_files}
     
@@ -205,7 +205,7 @@ def copy_with_replace_by_date(path_from, path_to, op_type, set_of_ignored_paths)
 
             if os.path.isfile(path_from_obj):
                 print("obj: {} (file)".format(obj))
-                res = copy_with_replace_by_date(path_from_obj, path_to, "fd", set_of_ignored_paths)
+                res = copy_with_replace_by_date(path_from_obj, path_to, "fd", list_of_ignored_paths)
                 print(res)
                 copied_files += res["copied_files"]
                 if res["status"] == "Error!":
@@ -224,7 +224,7 @@ def copy_with_replace_by_date(path_from, path_to, op_type, set_of_ignored_paths)
                 print("obj: {} (dir)".format(obj))
                 path_to_obj = os.path.join(path_to, obj)
                 path_to_obj = os.path.normpath(path_to_obj)
-                res = copy_with_replace_by_date(path_from_obj, path_to_obj, "dd", set_of_ignored_paths)
+                res = copy_with_replace_by_date(path_from_obj, path_to_obj, "dd", list_of_ignored_paths)
                 print(res)
                 copied_files += res["copied_files"]
                 if res["status"] == "Error!":
@@ -274,7 +274,7 @@ for i in mid.list_of_tasks:
     print("===============================================")
     print("Task {0} of {1}:".format(cur_task, len_tasks))
     print(i)
-    res = copy_with_replace_by_date(i[0], i[1], i[2], mid.set_of_ignored_paths)
+    res = copy_with_replace_by_date(i[0], i[1], i[2], mid.list_of_ignored_paths)
     print(res)
     sum_copied_files += res["copied_files"]
     general_report.append([i, res, task_errors.copy()])
