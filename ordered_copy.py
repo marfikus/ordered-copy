@@ -65,7 +65,7 @@ def ordered_copy_my(path_from, path_to, pause_between_copy=1.0):
 
 
     dir_list = os.listdir(path_from)
-    dir_list.sort(key=get_mtime)
+    # dir_list.sort(key=get_mtime)
 
     for i in dir_list:
         obj_path = os.path.join(path_from, i)
@@ -80,11 +80,13 @@ def ordered_copy_my(path_from, path_to, pause_between_copy=1.0):
             dir_path = os.path.normpath(dir_path)
             try:
                 os.mkdir(dir_path)
+                # shutil.copystat(obj_path, dir_path) # возможно это надо делать после заполнения каталога
             except FileExistsError as e:
                 print(e)
             ordered_copy_my(obj_path, dir_path, pause_between_copy)
+            shutil.copystat(obj_path, dir_path)
 
-        time.sleep(pause_between_copy)
+        # time.sleep(pause_between_copy)
 
 
 def ordered_copy_copytree(path_from, path_to):
