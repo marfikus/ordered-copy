@@ -4,12 +4,14 @@ import configparser
 import ast
 
 
-PROGRAM_VERSION = "1.1.0"
+PROGRAM_VERSION = "1.1.1"
 
 CONFIG_FILE = "ordered_copy.ini"
 DEFAULT_CONFIG = {
-    "list_of_tasks": [[r"test/from", r"test/to", "dd"], [r"test/a", r"test/to/a", "dd"]],
+    # "list_of_tasks": [[r"test/from", r"test/to", "dd"], [r"test/a", r"test/to/a", "dd"]],
+    "list_of_tasks": [],
     "list_of_ignored_paths": [],
+    "pause_before_exit": True,
     "debug_print": True,
 }
 config = {}
@@ -46,6 +48,7 @@ def load_config():
 
     config["list_of_tasks"] = load_key(parser, "list_of_tasks", "list")
     config["list_of_ignored_paths"] = load_key(parser, "list_of_ignored_paths", "list")
+    config["pause_before_exit"] = load_key(parser, "pause_before_exit", "bool")
     config["debug_print"] = load_key(parser, "debug_print", "bool")
 
 
@@ -354,6 +357,9 @@ def main():
                 print(j)
         print("===============================================")
     print("Total files copied:",  sum_copied_files)
+
+    if config["pause_before_exit"]:
+        input("Press Enter to end the program...")
 
 
 if __name__ == "__main__":
